@@ -28,7 +28,7 @@ const Chatinterface = () => {
   }, [chatHistory]);
 
   return (
-    <div className="w-full h-[94vh] flex flex-col px-5 mt-10 bg-gradient-to-b from-[#F7EFFF] to-[#E8D5F7]">
+    <div className="w-full h-[94vh] flex flex-col px-5 mt-15 bg-gradient-to-b from-[#F7EFFF] to-[#E8D5F7]">
       <div className="w-full flex-1 overflow-y-auto flex flex-col gap-2 p-2 mb-20 scrollbar-hide">
         {chatHistory.map((msg, idx) => (
           <React.Fragment key={idx}>
