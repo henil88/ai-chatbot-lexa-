@@ -7,7 +7,7 @@ const chatResponse = require("./src/service/ai.service");
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: "http://localhost:5173", // allow your frontend
+    origin: "https://ai-chatbot-lexa.netlify.app/", 
   },
 });
 const chatHistory = [];

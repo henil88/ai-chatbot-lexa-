@@ -1,7 +1,7 @@
 import { io } from "socket.io-client";
 
 // Initialize the socket connection
-const socket = io("http://localhost:3000", {
+const socket = io("https://ai-chatbot-lexa.onrender.com", {
   autoConnect: true,
 });
 
