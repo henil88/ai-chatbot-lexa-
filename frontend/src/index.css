@@ -1,0 +1,15 @@
+@import url("https://fonts.googleapis.com/css2?family=Nata+Sans:wght@100..900&display=swap");
+@import "tailwindcss";
+
+/* body {
+  font-family: 'Nata Sans', sans-serif;
+} */
+.scrollbar-hide {
+  /* Chrome, Edge, Safari */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
