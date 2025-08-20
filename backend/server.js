@@ -7,7 +7,8 @@ const chatResponse = require("./src/service/ai.service");
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: "https://ai-chatbot-lexa.netlify.app",
+    // origin: "https://ai-chatbot-lexa.netlify.app",
+    origin: "http://localhost:5173",
     methods: ["GET", "POST"],
   },
 });
@@ -44,5 +45,5 @@ io.on("connection", (socket) => {
 });
 
 httpServer.listen(process.env.PORT || 5000, () => {
-  console.log("Server is running on port 3000");
+  console.log("Server is running on port 5000");
 });

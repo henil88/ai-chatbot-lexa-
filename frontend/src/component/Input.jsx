@@ -4,19 +4,28 @@ import { MessageContext } from "../context/chatContext";
 import socket from "../socketClient/socketinit";
 
 const Input = () => {
-  const { chatHistory, setchatHistory } = useContext(MessageContext);
+  const { setchatHistory, setIsTyping } = useContext(MessageContext);
   const [message, setMessage] = useState("");
 
   const handleSend = () => {
     if (message.trim() === "") return;
-    // console.log(message);
+
+    // Send to server
     socket.emit("message", message);
+
+    // Add user msg in UI
     setchatHistory((prev) => [
       ...prev,
-      { role: "user", text: message, timestamp: Date.now()},
+      { role: "user", text: message, timestamp: Date.now() },
     ]);
+
+    // 👇 Show typing dots while waiting for AI
+    setIsTyping(true);
+
+    // Clear input
     setMessage("");
   };
+
   return (
     <div className="fixed bottom-2 w-full flex justify-center z-50 px-2 sm:px-5">
       <div className="bg-white flex items-center justify-between px-3 py-2 w-full sm:w-[90%] md:w-[80%] rounded-lg shadow-md">
