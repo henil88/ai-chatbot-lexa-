@@ -11,12 +11,10 @@ const io = new Server(httpServer, {
     methods: ["GET", "POST"],
   },
 });
-
 const sessions = {};
 
 io.on("connection", (socket) => {
   console.log("socket connected:", socket.id);
-
   sessions[socket.id] = [];
 
   socket.on("disconnect", () => {
@@ -29,7 +27,6 @@ io.on("connection", (socket) => {
       role: "user",
       parts: [{ text: data }],
     });
-
     const response = await chatResponse(sessions[socket.id]);
 
     sessions[socket.id].push({
@@ -42,7 +39,6 @@ io.on("connection", (socket) => {
     socket.emit("message-res", { response });
   });
 });
-
-httpServer.listen(process.env.PORT || 5000, () => {
-  console.log("Server is running on port 5000");
+httpServer.listen(process.env.PORT || 3000, () => {
+  console.log("Server is running on port 3000");
 });
