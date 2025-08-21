@@ -12,6 +12,7 @@ function getUserId() {
 
 const socket = io("https://ai-chatbot-lexa.onrender.com", {
   autoConnect: true,
+  transports: ["websocket"],
   query: { userId: getUserId() },
 });
 
