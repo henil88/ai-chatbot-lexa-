@@ -15,27 +15,32 @@ const io = new Server(httpServer, {
 const sessions = {};
 
 io.on("connection", (socket) => {
-  console.log("socket connected:", socket.id);
-  sessions[socket.id] = [];
+  const userId = socket.handshake.query.userId;
+  console.log("socket connected:", socket.id, "userId:", userId);
+
+  if (!sessions[userId]) {
+    sessions[userId] = [];
+  }
 
   socket.on("disconnect", () => {
     console.log("socket disconnected:", socket.id);
-    delete sessions[socket.id];
+    delete sessions[userId];
   });
 
   socket.on("message", async (data) => {
-    sessions[socket.id].push({
+    sessions[userId].push({
       role: "user",
       parts: [{ text: data }],
     });
-    const response = await chatResponse(sessions[socket.id]);
 
-    sessions[socket.id].push({
+    const response = await chatResponse(sessions[userId]);
+
+    sessions[userId].push({
       role: "model",
       parts: [{ text: response }],
     });
 
-    console.log(`Reply to ${socket.id}:`, response);
+    console.log(`Reply to userId ${userId}:`, response);
 
     socket.emit("message-res", { response });
   });
