@@ -7,39 +7,38 @@ const chatResponse = require("./src/service/ai.service");
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    // origin: "https://ai-chatbot-lexa.netlify.app",
-    origin: "http://localhost:5173",
+    origin: "https://ai-chatbot-lexa.netlify.app",
     methods: ["GET", "POST"],
   },
 });
-const chatHistory = [];
+
+const sessions = {};
 
 io.on("connection", (socket) => {
-  console.log("socket connection success");
+  console.log("socket connected:", socket.id);
+
+  sessions[socket.id] = [];
 
   socket.on("disconnect", () => {
-    console.log("socket disconnected");
+    console.log("socket disconnected:", socket.id);
+    delete sessions[socket.id];
   });
 
   socket.on("message", async (data) => {
-    chatHistory.push({
+    sessions[socket.id].push({
       role: "user",
-      parts: [
-        {
-          text: data,
-        },
-      ],
+      parts: [{ text: data }],
     });
-    const response = await chatResponse(chatHistory);
-    chatHistory.push({
+
+    const response = await chatResponse(sessions[socket.id]);
+
+    sessions[socket.id].push({
       role: "model",
-      parts: [
-        {
-          text: response,
-        },
-      ],
+      parts: [{ text: response }],
     });
-    console.log(response);
+
+    console.log(`Reply to ${socket.id}:`, response);
+
     socket.emit("message-res", { response });
   });
 });
