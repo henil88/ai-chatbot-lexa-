@@ -24,7 +24,7 @@ const Chatinterface = () => {
     return () => {
       socket.off("message-res", handleAiMsg);
     };
-  }, []);
+  }, [chatHistory]);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
