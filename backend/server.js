@@ -24,7 +24,7 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     console.log("socket disconnected:", socket.id);
-    delete sessions[userId];
+    // delete sessions[userId];
   });
 
   socket.on("message", async (data) => {
