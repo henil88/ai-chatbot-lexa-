@@ -3,16 +3,24 @@ const { GoogleGenAI } = require("@google/genai");
 const ai = new GoogleGenAI({});
 
 async function chatResponse(conversationHistory) {
+  const groundingTool = {
+    googleSearch: {},
+  };
+
   const now = new Date();
   const BOT_TZ = process.env.BOT_TIMEZONE || "Asia/Kolkata";
 
-
-  const currentDate = now.toLocaleDateString("en-GB", { timeZone: BOT_TZ }); 
-  const currentDay = now.toLocaleDateString("en-GB", { weekday: "long", timeZone: BOT_TZ });
-  const currentMonth = now.toLocaleDateString("en-GB", { month: "long", timeZone: BOT_TZ });
+  const currentDate = now.toLocaleDateString("en-GB", { timeZone: BOT_TZ });
+  const currentDay = now.toLocaleDateString("en-GB", {
+    weekday: "long",
+    timeZone: BOT_TZ,
+  });
+  const currentMonth = now.toLocaleDateString("en-GB", {
+    month: "long",
+    timeZone: BOT_TZ,
+  });
   const currentYear = now.getFullYear();
 
- 
   const time24 = now.toLocaleTimeString("en-GB", {
     hour: "2-digit",
     minute: "2-digit",
@@ -39,26 +47,24 @@ async function chatResponse(conversationHistory) {
     timeZone: BOT_TZ,
   });
 
-  
   const lastUserMsg =
     conversationHistory
       .filter((m) => m.role === "user")
       .slice(-1)[0]
       ?.parts[0]?.text.toLowerCase() || "";
 
-  let chosenTime = time24; 
+  let chosenTime = time24;
   if (lastUserMsg.includes("12")) {
     chosenTime = lastUserMsg.includes("second") ? time12WithSec : time12;
   } else if (lastUserMsg.includes("second")) {
     chosenTime = time24WithSec;
   }
 
-  // --- Gemini Response ---
-  const response = await ai.models.generateContent({
-    model: "gemini-2.5-flash",
-    contents: conversationHistory, 
-    config: {
-      systemInstruction: `LEXA personality guide:
+  // ---- googel search ----
+
+  const config = {
+    tools: [groundingTool],
+    systemInstruction: `LEXA personality guide:
 
 - Greetings: If user says "Hello", reply: "Hello 👋 How can I assist you today?"
 - Identity: "My name is LEXA, developed by Henil Rajput ✨"
@@ -81,10 +87,16 @@ async function chatResponse(conversationHistory) {
 - Only say "How can I assist you today?" when greeting.
 - Always respond warmly, friendly, and professional in LEXA’s voice ✨
 `,
-    },
-  });
+  };
 
+  // --- Gemini Response ---
+  const response = await ai.models.generateContent({
+    model: "gemini-2.5-flash",
+    contents: conversationHistory,
+    config,
+  });
+  // console.log("-----------------");
+  // console.log(response);
   return response.text;
 }
-
 module.exports = chatResponse;
